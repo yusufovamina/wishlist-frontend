@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Flex, Text, Spacer, HStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, HStack, IconButton, useMediaQuery } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaHome, FaGift } from "react-icons/fa"; // Иконки дома и подарка
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const [isMobile] = useMediaQuery("(max-width: 768px)"); // Проверяем, мобильное ли устройство
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,64 +27,66 @@ const Navbar = () => {
       p={4}
       boxShadow="md"
     >
-      <Flex maxW="1200px" mx="auto" align="center">
-        {/* Home Button */}
-        <HStack spacing={4}> {/* ✅ Добавлен горизонтальный стек с отступом */}
-  <Button
-    as={Link}
-    to="/"
-    variant="solid"
-    bgGradient="linear(to-r, purple.500, blue.400)"
-    color="white"
-    _hover={{ bgGradient: "linear(to-r, purple.600, blue.500)" }}
-    borderRadius="lg"
-  >
-    Home
-  </Button>
-
-  <Button 
-    as={Link} 
-    to="/reserved-gifts" 
-    bgGradient="linear(to-r, pink.500, purple.600)"
-    color="white"
-    _hover={{ bgGradient: "linear(to-r, pink.600, purple.700)", transform: "scale(1.05)" }}
-    borderRadius="lg"
-  >
-    My gifts 
-  </Button>
-</HStack>
-
-        <Spacer />
-
-{/* Centered Wishlist Title */}
-<Text fontSize="2xl" fontWeight="bold" color="purple.700" textAlign="center">
-  Wishlist
-</Text>
-
-        <Spacer />
-
-        {isLoggedIn ? (
-          <Button
-            onClick={handleLogout}
-            bgGradient="linear(to-r, red.400, pink.400)"
-            color="white"
-            _hover={{ bgGradient: "linear(to-r, red.500, pink.500)" }}
-            borderRadius="lg"
-          >
-            Logout
-          </Button>
-        ) : (
-          <Button
+      <Flex maxW="1200px" mx="auto" align="center" position="relative">
+        {/* Левая часть - Home и My Gifts */}
+        <HStack spacing={4} position="absolute" left="0">
+          {/* Home Button (текст или иконка) */}
+          <IconButton
             as={Link}
-            to="/login"
-            bgGradient="linear(to-r, blue.400, cyan.400)"
+            to="/"
+            icon={<FaHome />} // 🏠 Иконка дома
+            aria-label="Home"
+            bgGradient="linear(to-r, purple.500, blue.400)"
             color="white"
-            _hover={{ bgGradient: "linear(to-r, blue.500, cyan.500)" }}
+            _hover={{ bgGradient: "linear(to-r, purple.600, blue.500)" }}
             borderRadius="lg"
-          >
-            Login
-          </Button>
-        )}
+          />
+
+          {/* My Gifts Button (иконка подарка 🎁) */}
+          <IconButton
+            as={Link}
+            to="/reserved-gifts"
+            icon={<FaGift />} // 🎁 Иконка подарка
+            aria-label="My Gifts"
+            bgGradient="linear(to-r, pink.500, purple.600)"
+            color="white"
+            _hover={{ bgGradient: "linear(to-r, pink.600, purple.700)", transform: "scale(1.05)" }}
+            borderRadius="lg"
+          />
+        </HStack>
+
+        {/* Центр - Заголовок */}
+        <Box flex="1" textAlign="center">
+          <Text fontSize="2xl" fontWeight="bold" color="purple.700">
+            Wishlist
+          </Text>
+        </Box>
+
+        {/* Правая часть - Login / Logout */}
+        <HStack position="absolute" right="0">
+          {isLoggedIn ? (
+            <Button
+              onClick={handleLogout}
+              bgGradient="linear(to-r, red.400, pink.400)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-r, red.500, pink.500)" }}
+              borderRadius="lg"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              as={Link}
+              to="/login"
+              bgGradient="linear(to-r, blue.400, cyan.400)"
+              color="white"
+              _hover={{ bgGradient: "linear(to-r, blue.500, cyan.500)" }}
+              borderRadius="lg"
+            >
+              Login
+            </Button>
+          )}
+        </HStack>
       </Flex>
     </Box>
   );
