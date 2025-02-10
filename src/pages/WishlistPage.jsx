@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { 
   Container, Heading, SimpleGrid, Box, Image, Text, VStack, 
   Button, useToast, HStack, IconButton, Modal, ModalOverlay, 
-  ModalContent, ModalHeader, ModalBody, ModalFooter, Input 
+  ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Spinner 
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ const WishlistPage = () => {
   const [gifts, setGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null);
   const [editedGift, setEditedGift] = useState({ name: "", price: "", category: "" });
+  const [isLoading, setIsLoading] = useState(false); // Загрузка
   const toast = useToast();
   const userId = localStorage.getItem("userId"); 
   const isFriend = sharedUserId && sharedUserId !== userId;
@@ -97,8 +98,8 @@ const WishlistPage = () => {
       maxW="container.xl" 
       mt={5} 
       p={5} 
-      bg="rgba(255, 255, 255, 0.15)"  // ✅ Glass effect
-      backdropFilter="blur(20px)"  // ✅ Blurred background
+      bg="rgba(255, 255, 255, 0.5)" 
+      backdropFilter="blur(20px)" 
       borderRadius="lg" 
       boxShadow="xl"
     >
@@ -106,7 +107,7 @@ const WishlistPage = () => {
         {isFriend ? "Shared Wishlist 🎁" : "My Wishlist 🎁"}
       </Heading>
 
-      {!sharedUserId && <GiftForm onGiftAdded={fetchGifts} />}
+      {!sharedUserId && <GiftForm onGiftAdded={fetchGifts} setIsLoading={setIsLoading} />}
 
       {!sharedUserId && (
         <Button 
@@ -121,7 +122,12 @@ const WishlistPage = () => {
         </Button>
       )}
 
-      {gifts.length === 0 ? (
+      {/* Показываем спиннер во время загрузки */}
+      {isLoading ? (
+        <HStack justify="center" mt={5}>
+          <Spinner size="xl" />
+        </HStack>
+      ) : gifts.length === 0 ? (
         <Text textAlign="center" fontSize="lg" color="gray.600" mt={5}>
           No gifts in this wishlist yet.
         </Text>
@@ -134,7 +140,7 @@ const WishlistPage = () => {
               borderRadius="lg" 
               boxShadow="lg" 
               overflow="hidden"
-              bg="rgba(255, 255, 255, 0.2)"  // ✅ Glass effect
+              bg="rgba(255, 255, 255, 0.2)" 
               backdropFilter="blur(15px)"  
               border="1px solid rgba(255, 255, 255, 0.3)"  
               p={4}
@@ -172,38 +178,40 @@ const WishlistPage = () => {
             </Box>
           ))}
         </SimpleGrid>
-      )} <Modal isOpen={!!editingGift} onClose={() => setEditingGift(null)}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Gift</ModalHeader>
-        <ModalBody>
-          <Input 
-            placeholder="Name" 
-            value={editedGift.name} 
-            onChange={(e) => setEditedGift({ ...editedGift, name: e.target.value })} 
-            mb={3}
-          />
-          <Input 
-            placeholder="Price" 
-            type="number"
-            value={editedGift.price} 
-            onChange={(e) => setEditedGift({ ...editedGift, price: parseFloat(e.target.value) || 0 })} 
-            mb={3}
-          />
-          <Input 
-            placeholder="Category" 
-            value={editedGift.category} 
-            onChange={(e) => setEditedGift({ ...editedGift, category: e.target.value })} 
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={handleSaveEdit} colorScheme="blue">Save</Button>
-          <Button onClick={() => setEditingGift(null)} ml={3}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  </Container>
-);
+      )}
+
+      <Modal isOpen={!!editingGift} onClose={() => setEditingGift(null)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Gift</ModalHeader>
+          <ModalBody>
+            <Input 
+              placeholder="Name" 
+              value={editedGift.name} 
+              onChange={(e) => setEditedGift({ ...editedGift, name: e.target.value })} 
+              mb={3}
+            />
+            <Input 
+              placeholder="Price" 
+              type="number"
+              value={editedGift.price} 
+              onChange={(e) => setEditedGift({ ...editedGift, price: parseFloat(e.target.value) || 0 })} 
+              mb={3}
+            />
+            <Input 
+              placeholder="Category" 
+              value={editedGift.category} 
+              onChange={(e) => setEditedGift({ ...editedGift, category: e.target.value })} 
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={handleSaveEdit} colorScheme="blue">Save</Button>
+            <Button onClick={() => setEditingGift(null)} ml={3}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Container>
+  );
 };
 
 export default WishlistPage;

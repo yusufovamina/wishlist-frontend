@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Input, Button, VStack, useToast } from "@chakra-ui/react";
+import { Input, Button, VStack, useToast, Spinner } from "@chakra-ui/react";
 import api from "../services/api";
 
-const GiftForm = ({ onGiftAdded }) => {
+const GiftForm = ({ onGiftAdded, setIsLoading, isLoading }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -15,6 +15,7 @@ const GiftForm = ({ onGiftAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Начинаем анимацию загрузки
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -25,10 +26,11 @@ const GiftForm = ({ onGiftAdded }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false); // Завершаем загрузку в случае ошибки
         return;
       }
 
-      // ✅ Step 1: Create Gift (No wishlistId needed)
+      // Создаем FormData для отправки изображения
       const formData = new FormData();
       formData.append("name", name.trim());
       formData.append("price", parseFloat(price));
@@ -46,7 +48,7 @@ const GiftForm = ({ onGiftAdded }) => {
         },
       });
 
-      // Notify user
+      // Уведомление об успешном добавлении
       toast({
         title: "Gift Added",
         description: "Gift has been successfully added!",
@@ -55,13 +57,12 @@ const GiftForm = ({ onGiftAdded }) => {
         isClosable: true,
       });
 
-      // Clear form fields
+      // Очистка формы и обновление списка подарков
       setName("");
       setPrice("");
       setCategory("");
       setImage(null);
-      onGiftAdded(); // Refresh gift list
-
+      onGiftAdded(); // Обновляем список подарков
     } catch (error) {
       console.error("❌ Error adding gift:", error.response?.data || error.message);
       toast({
@@ -71,17 +72,35 @@ const GiftForm = ({ onGiftAdded }) => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setIsLoading(false); // Завершаем загрузку в любом случае
     }
   };
 
   return (
     <VStack as="form" onSubmit={handleSubmit} spacing={4} mt={4}>
-      <Input placeholder="Gift Name" value={name} onChange={(e) => setName(e.target.value)} required />
-      <Input placeholder="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-      <Input placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} required />
+      <Input
+        placeholder="Gift Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <Input
+        placeholder="Price"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        required
+      />
+      <Input
+        placeholder="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        required
+      />
       <Input type="file" accept="image/*" onChange={handleImageChange} />
-      <Button type="submit" colorScheme="blue">
-        Add Gift
+      <Button type="submit" colorScheme="blue" isLoading={isLoading}>
+        {isLoading ? <Spinner size="sm" /> : "Add Gift"} {/* Показываем спиннер */}
       </Button>
     </VStack>
   );
