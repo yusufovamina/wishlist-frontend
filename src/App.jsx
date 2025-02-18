@@ -28,7 +28,7 @@ const App = () => {
       {/* ✅ Soft Purple-Blue Gradient Background */}
       <Box
         minH="100vh"
-        bgGradient="linear(to-br, rgba(240, 230, 255, 0.8), rgba(200, 230, 255, 0.8))"
+        bgGradient="linear(to-br, rgba(237, 213, 243, 0.8), rgba(145, 185, 218, 0.8))"
         backdropFilter="blur(10px)"
       >
         <Router>

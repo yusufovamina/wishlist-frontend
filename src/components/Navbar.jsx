@@ -1,21 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Flex, Text, HStack, IconButton, useMediaQuery } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaGift } from "react-icons/fa"; // Иконки дома и подарка
+import { FaHome, FaGift } from "react-icons/fa"; 
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const navigate = useNavigate();
-  const [isMobile] = useMediaQuery("(max-width: 768px)"); // Проверяем, мобильное ли устройство
+  const [isMobile] = useMediaQuery("(max-width: 768px)"); 
 
+  
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const updateAuthStatus = () => setIsLoggedIn(!!localStorage.getItem("token"));
+
+    window.addEventListener("storage", updateAuthStatus);
+
+    return () => {
+      window.removeEventListener("storage", updateAuthStatus);
+    };
   }, []);
+
+  
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [localStorage.getItem("token")]); // Отслеживаем изменение токена
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
     navigate("/login");
   };
@@ -30,11 +42,10 @@ const Navbar = () => {
       <Flex maxW="1200px" mx="auto" align="center" position="relative">
         {/* Левая часть - Home и My Gifts */}
         <HStack spacing={4} position="absolute" left="0">
-          {/* Home Button (текст или иконка) */}
           <IconButton
             as={Link}
             to="/"
-            icon={<FaHome />} // 🏠 Иконка дома
+            icon={<FaHome />}
             aria-label="Home"
             bgGradient="linear(to-r, purple.500, blue.400)"
             color="white"
@@ -42,11 +53,10 @@ const Navbar = () => {
             borderRadius="lg"
           />
 
-          {/* My Gifts Button (иконка подарка 🎁) */}
           <IconButton
             as={Link}
             to="/reserved-gifts"
-            icon={<FaGift />} // 🎁 Иконка подарка
+            icon={<FaGift />}
             aria-label="My Gifts"
             bgGradient="linear(to-r, pink.500, purple.600)"
             color="white"

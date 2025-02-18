@@ -97,8 +97,8 @@ const WishlistPage = () => {
       maxW="container.xl" 
       mt={5} 
       p={5} 
-      bg="rgba(255, 255, 255, 0.15)"  // ✅ Glass effect
-      backdropFilter="blur(20px)"  // ✅ Blurred background
+      bg="rgba(255, 255, 255, 0.7)"   
+      backdropFilter="blur(20px)"  
       borderRadius="lg" 
       boxShadow="xl"
     >

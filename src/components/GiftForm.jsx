@@ -28,7 +28,6 @@ const GiftForm = ({ onGiftAdded }) => {
         return;
       }
 
-      // ✅ Step 1: Create Gift (No wishlistId needed)
       const formData = new FormData();
       formData.append("name", name.trim());
       formData.append("price", parseFloat(price));

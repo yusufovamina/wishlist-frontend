@@ -68,7 +68,7 @@ const ReservedGiftsPage = () => {
               boxShadow="lg" 
               p={4} 
               textAlign="center"
-              bg="rgba(255, 255, 255, 0.15)"
+              bg="rgba(255, 255, 255, 0.5)"
               backdropFilter="blur(20px)"
               border="1px solid rgba(255, 255, 255, 0.3)"
             >
