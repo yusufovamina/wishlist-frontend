@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Flex, Text, HStack, IconButton, useMediaQuery } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaGift } from "react-icons/fa"; 
+import { FaHome, FaGift } from "react-icons/fa";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const navigate = useNavigate();
-  const [isMobile] = useMediaQuery("(max-width: 768px)"); 
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
-  
   useEffect(() => {
     const updateAuthStatus = () => setIsLoggedIn(!!localStorage.getItem("token"));
-
     window.addEventListener("storage", updateAuthStatus);
-
-    return () => {
-      window.removeEventListener("storage", updateAuthStatus);
-    };
+    return () => window.removeEventListener("storage", updateAuthStatus);
   }, []);
 
-  
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, [localStorage.getItem("token")]); // Отслеживаем изменение токена
@@ -39,9 +33,9 @@ const Navbar = () => {
       p={4}
       boxShadow="md"
     >
-      <Flex maxW="1200px" mx="auto" align="center" position="relative">
+      <Flex maxW="1200px" mx="auto" align="center" justify="space-between">
         {/* Левая часть - Home и My Gifts */}
-        <HStack spacing={4} position="absolute" left="0">
+        <HStack spacing={4}>
           <IconButton
             as={Link}
             to="/"
@@ -52,7 +46,6 @@ const Navbar = () => {
             _hover={{ bgGradient: "linear(to-r, purple.600, blue.500)" }}
             borderRadius="lg"
           />
-
           <IconButton
             as={Link}
             to="/reserved-gifts"
@@ -65,13 +58,14 @@ const Navbar = () => {
           />
         </HStack>
 
-        {/* Центр - Заголовок */}
-        <Box flex="1" textAlign="center">
-          <Text fontSize="4xl" fontWeight="bold" color="purple.700">
+        {/* Заголовок по центру */}
+        <Box flex="1" display="flex" justifyContent="center">
+          <Text fontSize={isMobile ? "2xl" : "4xl"} fontWeight="bold" color="purple.700" whiteSpace="nowrap">
             Wishlist
           </Text>
         </Box>
 
+        {/* Кнопка Login / Logout */}
         <HStack spacing={4}>
           {isLoggedIn ? (
             <Button
