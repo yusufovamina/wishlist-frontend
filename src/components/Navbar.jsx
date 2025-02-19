@@ -67,20 +67,21 @@ const Navbar = () => {
 
         {/* Центр - Заголовок */}
         <Box flex="1" textAlign="center">
-          <Text fontSize="2xl" fontWeight="bold" color="purple.700">
+          <Text fontSize="4xl" fontWeight="bold" color="purple.700">
             Wishlist
           </Text>
         </Box>
 
-        {/* Правая часть - Login / Logout */}
-        <HStack position="absolute" right="0">
+        <HStack spacing={4}>
           {isLoggedIn ? (
             <Button
               onClick={handleLogout}
               bgGradient="linear(to-r, red.400, pink.400)"
               color="white"
-              _hover={{ bgGradient: "linear(to-r, red.500, pink.500)" }}
+              _hover={{ bgGradient: "linear(to-r, red.500, pink.500)", transform: "scale(1.1)" }}
               borderRadius="lg"
+              px={6}
+              transition="all 0.2s ease-in-out"
             >
               Logout
             </Button>
@@ -90,8 +91,10 @@ const Navbar = () => {
               to="/login"
               bgGradient="linear(to-r, blue.400, cyan.400)"
               color="white"
-              _hover={{ bgGradient: "linear(to-r, blue.500, cyan.500)" }}
+              _hover={{ bgGradient: "linear(to-r, blue.500, cyan.500)", transform: "scale(1.1)" }}
               borderRadius="lg"
+              px={6}
+              transition="all 0.2s ease-in-out"
             >
               Login
             </Button>

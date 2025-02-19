@@ -8,6 +8,7 @@ import WishlistPage from "./pages/WishlistPage";
 import ReservedGiftsPage from "./pages/ReservedGiftsPage";
 import SharePage from "./pages/SharePage";
 import { ChakraProvider, Box } from "@chakra-ui/react";
+import AnimatedBackground from "./components/AnimatedBackground"; // 🎨 Добавляем 3D фон
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,22 +26,19 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      {/* ✅ Soft Purple-Blue Gradient Background */}
-      <Box
-        minH="100vh"
-        bgGradient="linear(to-br, rgba(237, 213, 243, 0.8), rgba(145, 185, 218, 0.8))"
-        backdropFilter="blur(10px)"
-      >
+      {/* 🔵 3D Фон + UI */}
+      <Box position="relative" minH="100vh" overflow="hidden">
+        <AnimatedBackground /> {/* ⬅ Фон теперь активный */}
+        
         <Router>
           <Navbar onLogout={handleLogout} />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            { <Route path="/wishlist" element={<WishlistPage />} />}
+            <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/wishlist/shared/:sharedUserId" element={<WishlistPage />} />
-
-  <Route path="/reserved-gifts" element={<ReservedGiftsPage />} />
+            <Route path="/reserved-gifts" element={<ReservedGiftsPage />} />
           </Routes>
         </Router>
       </Box>
