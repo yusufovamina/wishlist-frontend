@@ -26,9 +26,8 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      {/* 🔵 3D Фон + UI */}
       <Box position="relative" minH="100vh" overflow="hidden">
-        <AnimatedBackground /> {/* ⬅ Фон теперь активный */}
+        <AnimatedBackground /> 
         
         <Router>
           <Navbar onLogout={handleLogout} />

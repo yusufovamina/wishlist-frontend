@@ -64,11 +64,11 @@ const BackgroundGradient = () => {
   return (
     <div
       style={{
-        position: "absolute",
+        position: "fixed",
         top: 0,
         left: 0,
         width: "100vw",
-        height: "100vh",
+        height: "100%",
         background: "linear-gradient(135deg, #e6d4ff, #f4c2ff, #d1a3ff)",
         zIndex: -2,
       }}
